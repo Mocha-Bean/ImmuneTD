@@ -27,6 +27,8 @@ public class TowerManager : MonoBehaviour
 
     [SerializeField]
     private GameObject BCellTurretPrefab;
+    [SerializeField]
+    private GameObject TCellTurretPrefab;
 
     Color floorColor = new Color(0.227f, 0.004f, 0f, 1f);
     Color pathColor = new Color(0.478f, 0.196f, 0.161f, 1f);
@@ -111,6 +113,7 @@ public class TowerManager : MonoBehaviour
                 case TowerID.TCell:
                     TowerMap.SetTile(pos, turretbase);
                     TowerMap.SetColor(pos, new Color(0.937f, 0.744f, 0.231f, 1f));
+                    GameObject.Instantiate(TCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
                     break;
                 case TowerID.NKCell:
                     TowerMap.SetTile(pos, turretbase);
