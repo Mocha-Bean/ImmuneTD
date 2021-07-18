@@ -71,6 +71,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a673bb2823d11ab40ad776eb39ceebec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthMax: 0
+  health: 0
+  passiveHeal: 0
+  passiveHealDefault: 0
+  effectiveHP: 0
+  attackDamage: 0
+  effectiveDamage: 0
+  attackSpeed: 0
+  team: 1
+  targetTeam: 0
+  rangeBox: {fileID: 0}
   gunTransform: {fileID: 4764500166124125434}
   gunAnimator: {fileID: 4764500166124125436}
   bulletPrefab: {fileID: 5491701648749496953, guid: 3fbe7ede3dee8f648a615c7f512c4e90, type: 3}

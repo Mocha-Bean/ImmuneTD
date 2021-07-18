@@ -1394,7 +1394,6 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
-  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1410,26 +1409,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
---- !u!114 &519420030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AssetsPPU: 16
-  m_RefResolutionX: 320
-  m_RefResolutionY: 180
-  m_UpscaleRT: 0
-  m_PixelSnapping: 1
-  m_CropFrameX: 0
-  m_CropFrameY: 0
-  m_StretchFill: 0
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1646,7 +1625,7 @@ MonoBehaviour:
   hemocytoblast: {fileID: 11400000, guid: 504126de40d003e46a933684b1723084, type: 2}
   mastcell: {fileID: 11400000, guid: 6d7148a5fcf727d4d958f5a9a0bfaffb, type: 2}
   BCellTurretPrefab: {fileID: 1610212403197929927, guid: 16a1182cb76013f448880e5268c64f3f, type: 3}
-  TCellTurretPrefab: {fileID: 0}
+  TCellTurretPrefab: {fileID: 6258070887285514956, guid: 9329a6cc55fe585408e7a315cfe02e8a, type: 3}
 --- !u!4 &740785830
 Transform:
   m_ObjectHideFlags: 0

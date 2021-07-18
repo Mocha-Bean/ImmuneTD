@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turret : MonoBehaviour
+public class Turret : Attacker
 {
     [SerializeField]
     private Transform gunTransform;
@@ -46,5 +46,6 @@ public class Turret : MonoBehaviour
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         bullet.ShootTowards(mousePos);
+        bullet.shotBy = this;   // bullet shot by me
     }
 }
