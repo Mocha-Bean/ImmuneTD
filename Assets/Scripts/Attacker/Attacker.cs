@@ -14,13 +14,29 @@ public class Attacker : MonoBehaviour
     public float attackDamage;
     public float effectiveDamage;   // attackDamage * attackDamageMult;
     public float attackSpeed;
+    public bool awake;
+    public bool attackCooldown;
     public Team team;
     public Team targetTeam; // for example, a healer would target its own team
 
     public HashSet<StatusEffect> activeEffects = new HashSet<StatusEffect>();
     public HashSet<StatusEffect> attackEffects = new HashSet<StatusEffect>();     // what debuff(s)/buff(s) do we give on attack?
+    public Dictionary<StatusEffect, float> effectModifiers = new Dictionary<StatusEffect, float>
+    {
+        {StatusEffect.AttackSpeedUp, 4f/3f},
+        {StatusEffect.KnownAttackSpeed, 2f},
+        {StatusEffect.AttackSpeedDown, 2f/3f},
+        {StatusEffect.AttackDamageUp, 1.5f},
+        {StatusEffect.AttackDamageDown, 0.75f},
+        {StatusEffect.PassiveHeal, 0.1f},
+        {StatusEffect.PassiveDmg, 0.1f},
+        {StatusEffect.MoveSpeed, 4f/3f},
+        {StatusEffect.MoveSlow, 0.5f},
+        {StatusEffect.MoveBlock, 0f},
+        {StatusEffect.DefenseUp, 1.5f},
+        {StatusEffect.DefenseDown, 2f/3f}
+    };
 
-    [SerializeField]        // <- for testing; we can un-serialize it later
     protected HashSet<Attacker> TargetsInRange = new HashSet<Attacker>();
 
     // do not change; these should stay as 1 by default.
@@ -30,27 +46,43 @@ public class Attacker : MonoBehaviour
     protected float attackDamageMult = 1;
     // -------------------------------------------------
 
-    [SerializeField]
-    private BoxCollider2D rangeBox;
     private Bullet bullet;
 
     // public methods:
 
-    public void Attack(float dmg, HashSet<StatusEffect> effects, Attacker source)   // fyi: this doesn't send attacks, it receives them
-    {
-        if(dmg > 0)             // are we being damaged?
+    public bool Attack(float dmg, HashSet<StatusEffect> effects, Attacker source)   // fyi: this doesn't send attacks, it receives them
+    {                                                                               // returns true if still alive afterwards
+        bool aliveStatus = (health > 0);
+        if (aliveStatus)
         {
-            ChangeHealth(-dmg / defenseMult);
-            HandleAttack(source);
-        } else if (dmg < 0)     // are we being healed? (don't scale heal with defense)
+            if (dmg > 0)             // are we being damaged?
+            {
+                aliveStatus = ChangeHealth(-dmg / defenseMult);
+                HandleAttack(source);
+
+            }
+            else if (dmg < 0)     // are we being healed? (don't scale heal with defense)
+            {
+                ChangeHealth(-dmg);
+            }
+            else if (dmg == 0)
+            {
+                SetStatusEffects(); // manual effect refresh
+            }
+            if (!effects.IsSubsetOf(activeEffects))     // is this giving us any effects we don't already have?
+            {
+                activeEffects.UnionWith(effects);
+                SetStatusEffects();
+            }
+            if (!aliveStatus)
+            {
+                StartCoroutine(Kill());
+            }
+        } else
         {
-            ChangeHealth(-dmg);
+            StartCoroutine(Kill());
         }
-        if (!effects.IsSubsetOf(activeEffects))     // is this giving us any effects we don't already have?
-        {
-            activeEffects.UnionWith(effects);
-            SetStatusEffects();
-        }
+        return aliveStatus;
     }
 
     public void RangeBoxEnter(Collider2D collision)
@@ -62,26 +94,58 @@ public class Attacker : MonoBehaviour
             {
                 TargetsInRange.Add(newAttacker);
                 HandleNewTarget(newAttacker);
+                if (!awake)
+                {
+                    StartCoroutine(WakeUp());
+                }
             }
         }
     }
 
     public void RangeBoxExit(Collider2D collision)
     {
-        Attacker newAttacker;
-        if (collision.gameObject.TryGetComponent<Attacker>(out newAttacker))
+        Attacker oldAttacker;
+        if (collision.gameObject.TryGetComponent<Attacker>(out oldAttacker))
         {
-            TargetsInRange.Remove(newAttacker);     // if newAttacker (the attacker leaving rangeBox) is not already in TargetsInRange,
-            HandleLeaveTarget(newAttacker);         // this will just do nothing, as it should.
+            TargetsInRange.Remove(oldAttacker);     // if oldAttacker was not already in TargetsInRange, this will just do nothing, as it should.
+            if (TargetsInRange.Count == 0)
+            {
+                awake = false;
+            }
+            HandleLeaveTarget(oldAttacker);
         }
     }
 
-    public virtual void Kill()
+    public virtual Attacker GetPriorityTarget(HashSet<Attacker> targets)
     {
-        Destroy(gameObject);    // override if animation is desired, or if there are other things we need to clean up upon death
+        Attacker priority = null;
+        foreach(Attacker attacker in targets)
+        {
+            if(priority == null)
+            {
+                priority = attacker;
+            }
+            else
+            {
+                if (GetPriorityValue(attacker) > GetPriorityValue(priority)){
+                    priority = attacker;
+                }
+            }
+        }
+        return priority;
+    }
+
+    public virtual float GetPriorityValue(Attacker target)  // return some float value to represent relative value of target
+    {
+        return target.effectiveHP;
     }
 
     // protected methods:
+
+    protected virtual void TimedAttack()
+    {
+        // let derived class decide how to perform attack
+    }
 
     protected virtual void HandleAttack(Attacker source)
     {
@@ -115,34 +179,36 @@ public class Attacker : MonoBehaviour
             switch (effect)
             {
                 case StatusEffect.AttackSpeedUp:
-                    attackSpeedMult *= 2f;
+                case StatusEffect.KnownAttackSpeed:
+                    attackSpeedMult *= effectModifiers[effect];
                     break;
                 case StatusEffect.AttackSpeedDown:
-                    attackSpeedMult *= (2f / 3f);
+                    attackSpeedMult *= effectModifiers[effect];
                     break;
                 case StatusEffect.AttackDamageUp:
-                    attackDamageMult *= 1.5f;
+                    attackDamageMult *= effectModifiers[effect];
                     break;
                 case StatusEffect.AttackDamageDown:
-                    attackDamageMult *= 0.75f;
+                    attackDamageMult *= effectModifiers[effect];
                     break;
                 case StatusEffect.PassiveHeal:
-                    passiveHeal += 0.1f;
+                    passiveHeal += effectModifiers[effect];
                     break;
                 case StatusEffect.PassiveDmg:
-                    passiveHeal -= 0.1f;
+                    passiveHeal -= effectModifiers[effect];
                     break;
                 case StatusEffect.MoveSpeed:
-                    moveSpeedMult *= (4f / 3f);
+                    moveSpeedMult *= effectModifiers[effect];
                     break;
+                case StatusEffect.MoveBlock:
                 case StatusEffect.MoveSlow:
-                    moveSpeedMult *= 0.5f;
+                    moveSpeedMult *= effectModifiers[effect];
                     break;
                 case StatusEffect.DefenseUp:
-                    defenseMult *= 1.5f;
+                    defenseMult *= effectModifiers[effect];
                     break;
                 case StatusEffect.DefenseDown:
-                    defenseMult *= (2f / 3f);
+                    defenseMult *= effectModifiers[effect];
                     break;
             }
         }
@@ -152,20 +218,40 @@ public class Attacker : MonoBehaviour
 
     // private methods:
 
-    private void ChangeHealth(float amt)
+    protected IEnumerator WakeUp()    // calls TimedAttack() in sync with attackSpeed
+    {
+        awake = true;
+        while (awake && (health > 0))
+        {
+            TimedAttack();
+            attackCooldown = true;
+            yield return new WaitForSeconds(1f / (attackSpeed * attackSpeedMult));
+            attackCooldown = false;
+        }
+    }
+    protected IEnumerator Kill()
+    {
+        yield return new WaitForFixedUpdate();
+        Destroy(gameObject);
+    }
+
+    private bool ChangeHealth(float amt)    // returns true if still alive
     {
         health += amt;
         if (health <= 0)
         {
             attackSpeedMult = 0;    // these variables are set so that if derived Attacker classes play
             moveSpeedMult = 0;      // an animation in Kill() overrides, they aren't moving or attacking
-            Kill();                 // while doing so.
+            return false;           // while doing so.
+        }
+        else
+        {
+            return true;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Bullet bullet;
         Attacker bulletSource;
         if (collision.gameObject.TryGetComponent<Bullet>(out bullet))
         {

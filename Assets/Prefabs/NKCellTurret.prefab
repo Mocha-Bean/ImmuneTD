@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6258070887285514956
+--- !u!1 &4242699305441049391
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,39 +8,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8276623402819195884}
-  - component: {fileID: 8780207446473179406}
-  - component: {fileID: 869557363643136727}
+  - component: {fileID: 2225978850456160783}
+  - component: {fileID: 1576729350425270509}
+  - component: {fileID: 1634742325161386743}
   m_Layer: 0
-  m_Name: TCellTurret
+  m_Name: NKCellTurret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8276623402819195884
+--- !u!4 &2225978850456160783
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6258070887285514956}
+  m_GameObject: {fileID: 4242699305441049391}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 188969071969679345}
-  - {fileID: 629286725404445379}
+  - {fileID: 7973447785368808978}
+  - {fileID: 2420594750612134592}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &8780207446473179406
+--- !u!61 &1576729350425270509
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6258070887285514956}
+  m_GameObject: {fileID: 4242699305441049391}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -60,16 +60,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.625, y: 0.625}
   m_EdgeRadius: 0
---- !u!114 &869557363643136727
+--- !u!114 &1634742325161386743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6258070887285514956}
+  m_GameObject: {fileID: 4242699305441049391}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88ccaa006ce1e4b41a5956196b491476, type: 3}
+  m_Script: {fileID: 11500000, guid: 001745e4a3626ca4fb8b5e4b29d83728, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthMax: 100
@@ -77,23 +77,23 @@ MonoBehaviour:
   passiveHeal: 0
   passiveHealDefault: 0
   effectiveHP: 100
-  attackDamage: 5
+  attackDamage: 30
   effectiveDamage: 0
-  attackSpeed: 1
+  attackSpeed: 0.25
   awake: 0
   team: 1
   targetTeam: 0
   rangeBox: {fileID: 0}
-  bulletColor: {r: 1, g: 1, b: 1, a: 1}
-  gunTransform: {fileID: 188969071969679345}
-  gunAnimator: {fileID: 188969071969679351}
+  bulletColor: {r: 0.377, g: 0.377, b: 0.377, a: 1}
+  gunTransform: {fileID: 7973447785368808978}
+  gunAnimator: {fileID: 7973447785368808980}
   bulletPrefab: {fileID: 5491701648749496953, guid: 3fbe7ede3dee8f648a615c7f512c4e90, type: 3}
---- !u!1001 &5378562435472177126
+--- !u!1001 &2782174344495099397
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 8276623402819195884}
+    m_TransformParent: {fileID: 2225978850456160783}
     m_Modifications:
     - target: {fileID: 5204793752062623760, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
       propertyPath: m_Name
@@ -101,15 +101,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5204793752062623766, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
       propertyPath: m_Color.b
-      value: 0.231
+      value: 0.29
       objectReference: {fileID: 0}
     - target: {fileID: 5204793752062623766, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
       propertyPath: m_Color.g
-      value: 0.744
+      value: 0.29
       objectReference: {fileID: 0}
     - target: {fileID: 5204793752062623766, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
       propertyPath: m_Color.r
-      value: 0.937
+      value: 0.29
       objectReference: {fileID: 0}
     - target: {fileID: 5204793752062623767, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
       propertyPath: m_RootOrder
@@ -157,22 +157,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
---- !u!4 &188969071969679345 stripped
+--- !u!4 &7973447785368808978 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5204793752062623767, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
-  m_PrefabInstance: {fileID: 5378562435472177126}
+  m_PrefabInstance: {fileID: 2782174344495099397}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &188969071969679351 stripped
+--- !u!95 &7973447785368808980 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5204793752062623761, guid: c7d032dde644bf844b9ad54732a17aa5, type: 3}
-  m_PrefabInstance: {fileID: 5378562435472177126}
+  m_PrefabInstance: {fileID: 2782174344495099397}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &6018231057258591020
+--- !u!1001 &8838612967163405103
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 8276623402819195884}
+    m_TransformParent: {fileID: 2225978850456160783}
     m_Modifications:
     - target: {fileID: 3196798233989020640, guid: 76527e792672d8b448cabbcacf609c7a, type: 3}
       propertyPath: m_Name
@@ -181,7 +181,7 @@ PrefabInstance:
     - target: {fileID: 6154296204940695019, guid: 76527e792672d8b448cabbcacf609c7a, type: 3}
       propertyPath: parent
       value: 
-      objectReference: {fileID: 869557363643136727}
+      objectReference: {fileID: 1634742325161386743}
     - target: {fileID: 6574870300096657903, guid: 76527e792672d8b448cabbcacf609c7a, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -228,8 +228,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76527e792672d8b448cabbcacf609c7a, type: 3}
---- !u!4 &629286725404445379 stripped
+--- !u!4 &2420594750612134592 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6574870300096657903, guid: 76527e792672d8b448cabbcacf609c7a, type: 3}
-  m_PrefabInstance: {fileID: 6018231057258591020}
+  m_PrefabInstance: {fileID: 8838612967163405103}
   m_PrefabAsset: {fileID: 0}

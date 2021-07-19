@@ -29,6 +29,12 @@ public class TowerManager : MonoBehaviour
     private GameObject BCellTurretPrefab;
     [SerializeField]
     private GameObject TCellTurretPrefab;
+    [SerializeField]
+    private GameObject NKCellTurretPrefab;
+    [SerializeField]
+    private GameObject NeutrophilPrefab;
+    [SerializeField]
+    private GameObject MacrophagePrefab;
 
     Color floorColor = new Color(0.227f, 0.004f, 0f, 1f);
     Color pathColor = new Color(0.478f, 0.196f, 0.161f, 1f);
@@ -100,10 +106,12 @@ public class TowerManager : MonoBehaviour
             {
                 case TowerID.Neutrophil:
                     TowerMap.SetTile(pos, meleebase);
+                    GameObject.Instantiate(NeutrophilPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
                     break;
                 case TowerID.Macrophage:
                     TowerMap.SetTile(pos, meleebase);
                     TowerMap.SetColor(pos, new Color(0.486f, 0.322f, 0.678f, 1f));
+                    GameObject.Instantiate(MacrophagePrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
                     break;
                 case TowerID.BCell:
                     TowerMap.SetTile(pos, turretbase);
@@ -118,6 +126,7 @@ public class TowerManager : MonoBehaviour
                 case TowerID.NKCell:
                     TowerMap.SetTile(pos, turretbase);
                     TowerMap.SetColor(pos, new Color(0.29f, 0.29f, 0.29f, 1f));
+                    GameObject.Instantiate(NKCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
                     break;
                 case TowerID.DendriticCell:
                     TowerMap.SetTile(pos, dendritic);

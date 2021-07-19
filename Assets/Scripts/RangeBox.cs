@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RangeBox : MonoBehaviour
 {
+    [SerializeField]
     private Attacker parent;
     private void OnTriggerEnter2D(Collider2D collision)
     {
