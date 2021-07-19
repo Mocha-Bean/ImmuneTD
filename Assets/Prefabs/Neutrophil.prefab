@@ -122,10 +122,11 @@ MonoBehaviour:
   passiveHeal: 0
   passiveHealDefault: 0
   effectiveHP: 100
-  attackDamage: 30
+  attackDamage: 15
   effectiveDamage: 0
   attackSpeed: 1
   awake: 0
+  attackCooldown: 0
   team: 1
   targetTeam: 0
   weaponAnimator: {fileID: 4584110602237006566}

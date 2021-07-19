@@ -94,6 +94,10 @@ public class MeleeTower : Attacker
                 }
             }
         }
+        foreach (MovingAttacker target in newTargetsBlocking)
+        {
+            target.Attack(0f, attackEffects, this);     // send the targets a 0-damage attack to immediately block them
+        }
         targetsBlocking.Clear();
         targetsBlocking.UnionWith(newTargetsBlocking);  // set this so we can check it next cycle
         totalValue = totalValueNew;

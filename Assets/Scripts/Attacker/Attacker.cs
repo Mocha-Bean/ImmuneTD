@@ -59,7 +59,6 @@ public class Attacker : MonoBehaviour
             {
                 aliveStatus = ChangeHealth(-dmg / defenseMult);
                 HandleAttack(source);
-
             }
             else if (dmg < 0)     // are we being healed? (don't scale heal with defense)
             {

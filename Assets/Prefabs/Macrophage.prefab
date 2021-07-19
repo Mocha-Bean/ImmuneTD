@@ -150,7 +150,7 @@ MonoBehaviour:
   effectiveHP: 200
   attackDamage: 10
   effectiveDamage: 0
-  attackSpeed: 0.3
+  attackSpeed: 1
   awake: 0
   attackCooldown: 0
   team: 1
