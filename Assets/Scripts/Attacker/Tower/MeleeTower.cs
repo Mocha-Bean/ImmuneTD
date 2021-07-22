@@ -5,6 +5,9 @@ using Combat;
 
 public class MeleeTower : Attacker
 {
+    public TowerManager towerManager;
+    public Vector3Int tilePos;
+    
     protected int blockNum;
     private HashSet<MovingAttacker> targetsBlocking = new HashSet<MovingAttacker>();
     private HashSet<MovingAttacker> newTargetsBlocking = new HashSet<MovingAttacker>();
@@ -35,12 +38,13 @@ public class MeleeTower : Attacker
             {
                 attackTarget.BlockBy(this);
             }
-            else
-            {
-                Debug.Log("gottem");
-                // target is dead, note this
-            }
         }
+    }
+
+    protected override IEnumerator Kill()
+    {
+        towerManager.RequestDelete(tilePos);
+        return base.Kill();
     }
 
     protected void BlockRemove(MovingAttacker target)

@@ -98,20 +98,35 @@ public class TowerManager : MonoBehaviour
          */
     }
 
+    public void RequestDelete(Vector3Int pos)
+    {
+        Towers.Remove(pos);
+        RefreshTower(pos);
+    }
+
     private void RefreshTower(Vector3Int pos)    // update tower tile at pos based on dictionary state
     {
+        GameObject gameObject;
+        MeleeTower meleeTower;
+        Turret turret;
         if (Towers.ContainsKey(pos))        // should there be a tower at pos?
         {
             switch (Towers[pos])
             {
                 case TowerID.Neutrophil:
                     TowerMap.SetTile(pos, meleebase);
-                    GameObject.Instantiate(NeutrophilPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    gameObject = GameObject.Instantiate(NeutrophilPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    meleeTower = gameObject.GetComponent<MeleeTower>();
+                    meleeTower.towerManager = this;
+                    meleeTower.tilePos = pos;
                     break;
                 case TowerID.Macrophage:
                     TowerMap.SetTile(pos, meleebase);
                     TowerMap.SetColor(pos, new Color(0.486f, 0.322f, 0.678f, 1f));
-                    GameObject.Instantiate(MacrophagePrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    gameObject = GameObject.Instantiate(MacrophagePrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    meleeTower = gameObject.GetComponent<MeleeTower>();
+                    meleeTower.towerManager = this;
+                    meleeTower.tilePos = pos;
                     break;
                 case TowerID.BCell:
                     TowerMap.SetTile(pos, turretbase);

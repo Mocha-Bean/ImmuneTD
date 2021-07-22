@@ -37,6 +37,9 @@ public class Attacker : MonoBehaviour
         {StatusEffect.DefenseDown, 2f/3f}
     };
 
+   
+    protected BoxCollider2D boxCollider;
+
     protected HashSet<Attacker> TargetsInRange = new HashSet<Attacker>();
 
     // do not change; these should stay as 1 by default.
@@ -228,7 +231,7 @@ public class Attacker : MonoBehaviour
             attackCooldown = false;
         }
     }
-    protected IEnumerator Kill()
+    protected virtual IEnumerator Kill()
     {
         yield return new WaitForFixedUpdate();
         Destroy(gameObject);
@@ -252,13 +255,16 @@ public class Attacker : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Attacker bulletSource;
-        if (collision.gameObject.TryGetComponent<Bullet>(out bullet))
+        if (boxCollider.IsTouching(collision))    // don't pop bullets hitting the rangebox
         {
-            bulletSource = bullet.shotBy;
-            if (bulletSource.targetTeam == team)    // was this bullet meant for me? (note: this check cannot be performed on real-life bullets. don't try this at home)
+            if (collision.gameObject.TryGetComponent<Bullet>(out bullet))
             {
-                Attack(bulletSource.effectiveDamage, bulletSource.attackEffects, bulletSource);
-                bullet.Pop();
+                bulletSource = bullet.shotBy;
+                if (bulletSource.targetTeam == team)    // was this bullet meant for me? (note: this check cannot be performed on real-life bullets. don't try this at home)
+                {
+                    Attack(bulletSource.effectiveDamage, bulletSource.attackEffects, bulletSource);
+                    bullet.Pop();
+                }
             }
         }
     }
@@ -266,6 +272,7 @@ public class Attacker : MonoBehaviour
     private void OnEnable()
     {
         SetStatusEffects();
+        boxCollider = gameObject.GetComponent<BoxCollider2D>();
     }
 
     private void FixedUpdate()

@@ -3205,6 +3205,10 @@ PrefabInstance:
       propertyPath: moveSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1233087895109010162, guid: d3bd866550a67494a848d3da9e59ea4c, type: 3}
+      propertyPath: attackDamage
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 1233087895109010163, guid: d3bd866550a67494a848d3da9e59ea4c, type: 3}
       propertyPath: m_RootOrder
       value: 2
