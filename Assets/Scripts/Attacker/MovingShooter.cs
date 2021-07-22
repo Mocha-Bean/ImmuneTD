@@ -20,7 +20,6 @@ public class MovingShooter : MovingAttacker
         foreach (Attacker target in targetsSelected)
         {
             Combat.Gun.ShootAtAttacker(bulletPrefab, this, transform.position, target, bulletColor);
-            Debug.Log("pew");
         }
     }
 
@@ -38,12 +37,15 @@ public class MovingShooter : MovingAttacker
     {
         targetsRemaining.Clear();
         targetsRemaining.UnionWith(TargetsInRange);
+        targetsSelected.Clear();
         for (int i = 0; i < numShoot; i++)   // find the best priority target(s) to shoot and put them in targetsSelected
         {
-            priorityTarget = GetPriorityTarget(targetsRemaining);
-            targetsRemaining.Remove(priorityTarget);
-            targetsSelected.Add(priorityTarget);
-            Debug.Log(i);
+            if (targetsRemaining.Count != 0)
+            {
+                priorityTarget = GetPriorityTarget(targetsRemaining);
+                targetsRemaining.Remove(priorityTarget);
+                targetsSelected.Add(priorityTarget);
+            }
         }
     }
 }

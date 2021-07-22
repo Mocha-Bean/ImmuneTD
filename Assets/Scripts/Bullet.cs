@@ -23,7 +23,6 @@ public class Bullet : MonoBehaviour
 
     public void ShootAt (Attacker target)
     {
-        Debug.Log(target);
         Vector3 moveVector = target.gameObject.transform.position - transform.position;
         moveVector.Normalize();
         moveVector = moveVector * speedMultiplier;
