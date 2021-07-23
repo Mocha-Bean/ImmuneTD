@@ -33,10 +33,13 @@ public class MeleeTower : Attacker
         }
         foreach (MovingAttacker attackTarget in newTargetsBlocking)
         {
-            bool targetAlive = attackTarget.Attack(effectiveDamage, attackEffects, this);
-            if (targetAlive)       // if we killed the target, don't call their method!
+            if (attackTarget)
             {
-                attackTarget.BlockBy(this);
+                bool targetAlive = attackTarget.Attack(effectiveDamage, attackEffects, this);
+                if (targetAlive)       // if we killed the target, don't call their method!
+                {
+                    attackTarget.BlockBy(this);
+                }
             }
         }
     }

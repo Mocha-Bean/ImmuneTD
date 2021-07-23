@@ -17,6 +17,12 @@ public class MovingShooter : MovingAttacker
 
     protected override void TimedAttack()
     {
+        StartCoroutine(DelayAttack());
+    }
+
+    protected IEnumerator DelayAttack()
+    {
+        yield return new WaitForFixedUpdate();  // avoid race condition with multiple target finding
         foreach (Attacker target in targetsSelected)
         {
             Combat.Gun.ShootAtAttacker(bulletPrefab, this, transform.position, target, bulletColor);

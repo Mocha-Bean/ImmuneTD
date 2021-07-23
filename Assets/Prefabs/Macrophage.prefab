@@ -149,7 +149,7 @@ MonoBehaviour:
   passiveHeal: 0
   passiveHealDefault: 0
   effectiveHP: 200
-  attackDamage: 10
+  attackDamage: 30
   effectiveDamage: 0
   attackSpeed: 1
   awake: 0
@@ -278,11 +278,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 27.3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_LocalPosition.x

@@ -133,9 +133,12 @@ MonoBehaviour:
   moveSpeed: 2
   effectiveVector: {x: 0, y: 0, z: 0}
   Floor: {fileID: 0}
+  gameManager: {fileID: 0}
   blockedBy: {fileID: 0}
+  energyReward: 5
   path: {fileID: 11400000, guid: 734cede08a27832448a63cde539336a5, type: 2}
   animator: {fileID: 1233087895109010161}
+  currentTilePos: {x: 0, y: 0, z: 0}
 --- !u!61 &1233087895109010173
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -190,6 +193,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1233087895109010163}
     m_Modifications:
+    - target: {fileID: 1863264041564727551, guid: d36b687b6c451c941a300821184ec08a, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -220,11 +227,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 27.3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_LocalPosition.x

@@ -6,6 +6,9 @@ using UnityEngine.Tilemaps;
 public class TowerManager : MonoBehaviour
 {
     [SerializeField]
+    private GameManager gameManager;
+    
+    [SerializeField]
     private Tilemap floorSpots;
     [SerializeField]
     private Tilemap pathSpots;
@@ -35,6 +38,8 @@ public class TowerManager : MonoBehaviour
     private GameObject NeutrophilPrefab;
     [SerializeField]
     private GameObject MacrophagePrefab;
+    [SerializeField]
+    private GameObject hemocytoblastPrefab;
 
     Color floorColor = new Color(0.227f, 0.004f, 0f, 1f);
     Color pathColor = new Color(0.478f, 0.196f, 0.161f, 1f);
@@ -56,12 +61,28 @@ public class TowerManager : MonoBehaviour
         MastCell = 6
     }
 
+    private Dictionary<TowerID, int> towerCost = new Dictionary<TowerID, int>()
+    {
+        {TowerID.Neutrophil, 10},
+        {TowerID.Macrophage, 30},
+        {TowerID.BCell, 10},
+        {TowerID.TCell, 20},
+        {TowerID.NKCell, 30},
+        {TowerID.DendriticCell, 40},
+        {TowerID.Hemocytoblast, 20},
+        {TowerID.MastCell, 50}
+    };
+
     private Dictionary<Vector3Int, TowerID> Towers = new Dictionary<Vector3Int, TowerID>(); // dict of all placed towers with coords as key
 
     public int RequestSpawn(int id, Vector3Int pos)
     {
-        if (Towers.ContainsKey(pos)){       // is this tile already occupied?
+        if (Towers.ContainsKey(pos)) {       // is this tile already occupied?
             return -1;
+        } else if (gameManager.getEnergy() < towerCost[(TowerID)id])    // can we afford to place this unit?
+        {
+            print("Can't afford!");
+            return -2;
         } else if (id < 0)                  // is the tower we want to spawn a melee unit?
         {
             if (pathSpots.GetTile(pos) == selector)     // is the spot a valid tile for a melee unit?
@@ -108,6 +129,7 @@ public class TowerManager : MonoBehaviour
     {
         GameObject gameObject;
         MeleeTower meleeTower;
+        AOETower aoeTower;
         Turret turret;
         if (Towers.ContainsKey(pos))        // should there be a tower at pos?
         {
@@ -131,23 +153,36 @@ public class TowerManager : MonoBehaviour
                 case TowerID.BCell:
                     TowerMap.SetTile(pos, turretbase);
                     TowerMap.SetColor(pos, new Color(0.231f, 0.416f, 0.937f, 1f));
-                    GameObject.Instantiate(BCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    gameObject = GameObject.Instantiate(BCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    turret = gameObject.GetComponent<Turret>();
+                    turret.towerManager = this;
+                    turret.tilePos = pos;
                     break;
                 case TowerID.TCell:
                     TowerMap.SetTile(pos, turretbase);
                     TowerMap.SetColor(pos, new Color(0.937f, 0.744f, 0.231f, 1f));
-                    GameObject.Instantiate(TCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    gameObject = GameObject.Instantiate(TCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    turret = gameObject.GetComponent<Turret>();
+                    turret.towerManager = this;
+                    turret.tilePos = pos;
                     break;
                 case TowerID.NKCell:
                     TowerMap.SetTile(pos, turretbase);
                     TowerMap.SetColor(pos, new Color(0.29f, 0.29f, 0.29f, 1f));
-                    GameObject.Instantiate(NKCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    gameObject = GameObject.Instantiate(NKCellTurretPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    turret = gameObject.GetComponent<Turret>();
+                    turret.towerManager = this;
+                    turret.tilePos = pos;
                     break;
                 case TowerID.DendriticCell:
                     TowerMap.SetTile(pos, dendritic);
                     break;
                 case TowerID.Hemocytoblast:
                     TowerMap.SetTile(pos, hemocytoblast);
+                    gameObject = GameObject.Instantiate(hemocytoblastPrefab, (TowerMap.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f)), Quaternion.identity);
+                    aoeTower = gameObject.GetComponent<AOETower>();
+                    aoeTower.towerManager = this;
+                    aoeTower.tilePos = pos;
                     break;
                 case TowerID.MastCell:
                     TowerMap.SetTile(pos, mastcell);
@@ -155,8 +190,9 @@ public class TowerManager : MonoBehaviour
                 default:
                     return;
             }
+            gameManager.reduceEnergy(towerCost[Towers[pos]]);   // reduce energy reserves by cost of tower
             // if we just exited this switch, we can assume that we just spawned a valid tower, so let's hide the selector tile
-            if((int)Towers[pos] < 0)    // is this a melee unit?
+            if ((int)Towers[pos] < 0)    // is this a melee unit?
             {
                 pathSpots.SetColor(pos, Color.clear);
                 pathSpots.RefreshTile(pos);     // we need to refresh the tile so MapManager can see its color
@@ -168,7 +204,7 @@ public class TowerManager : MonoBehaviour
         }
         else      // dict has no entry at this pos, so if there's a tower here, we should delete it
         {
-            TowerMap.DeleteCells(pos, Vector3Int.one);
+            TowerMap.SetTile(pos, null);
             // and let's unhide the selector tile here:
             pathSpots.SetColor(pos, pathColor);
             pathSpots.RefreshTile(pos);

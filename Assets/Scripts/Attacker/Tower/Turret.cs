@@ -5,6 +5,9 @@ using UnityEngine;
 public class Turret : Attacker
 {
     public Color bulletColor = Color.white;
+    public TowerManager towerManager;
+    public Vector3Int tilePos;
+
     [SerializeField]
     private Transform gunTransform;
     [SerializeField]
@@ -20,5 +23,11 @@ public class Turret : Attacker
         float diffAngle = Mathf.Atan2(diff.y, diff.x);
         gunTransform.rotation = Quaternion.Euler(0f, 0f, diffAngle * Mathf.Rad2Deg);
         Combat.Gun.ShootAtAttacker(bulletPrefab, this, gunTransform.position, target, bulletColor);
+    }
+
+    protected override IEnumerator Kill()
+    {
+        towerManager.RequestDelete(tilePos);
+        return base.Kill();
     }
 }

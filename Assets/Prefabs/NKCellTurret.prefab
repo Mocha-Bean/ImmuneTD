@@ -80,12 +80,14 @@ MonoBehaviour:
   effectiveHP: 100
   attackDamage: 30
   effectiveDamage: 0
-  attackSpeed: 0.25
+  attackSpeed: 0.5
   awake: 0
   attackCooldown: 0
   team: 1
   targetTeam: 0
   bulletColor: {r: 0.377, g: 0.377, b: 0.377, a: 1}
+  towerManager: {fileID: 0}
+  tilePos: {x: 0, y: 0, z: 0}
   gunTransform: {fileID: 7973447785368808978}
   gunAnimator: {fileID: 7973447785368808980}
   bulletPrefab: {fileID: 5491701648749496953, guid: 3fbe7ede3dee8f648a615c7f512c4e90, type: 3}
@@ -96,6 +98,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2225978850456160783}
     m_Modifications:
+    - target: {fileID: 1863264041564727551, guid: d36b687b6c451c941a300821184ec08a, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -126,11 +132,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 27.3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4396564692957144421, guid: d36b687b6c451c941a300821184ec08a, type: 3}
       propertyPath: m_LocalPosition.x

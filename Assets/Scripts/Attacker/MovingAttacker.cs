@@ -9,7 +9,10 @@ public class MovingAttacker : Attacker
     public float moveSpeed;
     public Vector3 effectiveVector;
     public Tilemap Floor;
+    public GameManager gameManager;
     public Attacker blockedBy;
+
+    public int energyReward;
 
     [SerializeField]
     private TileBase path;
@@ -25,7 +28,7 @@ public class MovingAttacker : Attacker
     }
     private MoveDir moveDir;
     private Vector3Int moveVector;
-    private Vector3Int currentTilePos;
+    public Vector3Int currentTilePos;
     private Vector3Int checkTilePos;
     private Vector3 potentialNextPos;
 
@@ -135,7 +138,11 @@ public class MovingAttacker : Attacker
         }
     }
 
-
+    protected override IEnumerator Kill()
+    {
+        gameManager.ReportEnemyDeath(this, energyReward);   // if we were killed by PlayerDamageTrigger, it will remotely set our energyReward to 0
+        return base.Kill();
+    }
 
     // Update is called once per frame
     void Update()

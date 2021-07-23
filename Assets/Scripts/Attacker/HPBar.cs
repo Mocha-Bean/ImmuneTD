@@ -14,7 +14,7 @@ public class HPBar : MonoBehaviour
         // Get references to the UI elements
         barBackgroundRect = this.transform.GetChild(0).GetComponent<RectTransform>();
         barForegroundRect = this.transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>();
-        // Get reference to oparent Attacker object
+        // Get reference to parent Attacker object
         attacker = GetComponentInParent<Attacker>();
         barDimensions = barBackgroundRect.sizeDelta;
     }

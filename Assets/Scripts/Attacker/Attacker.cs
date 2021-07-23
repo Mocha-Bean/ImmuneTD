@@ -92,6 +92,7 @@ public class Attacker : MonoBehaviour
         Attacker newAttacker;
         if (collision.gameObject.TryGetComponent<Attacker>(out newAttacker))
         {
+            Debug.Log(newAttacker.team);
             if (newAttacker.team == targetTeam)
             {
                 TargetsInRange.Add(newAttacker);
@@ -99,6 +100,7 @@ public class Attacker : MonoBehaviour
                 if (!awake)
                 {
                     StartCoroutine(WakeUp());
+                    Debug.Log("woke");
                 }
             }
         }
@@ -233,8 +235,11 @@ public class Attacker : MonoBehaviour
     }
     protected virtual IEnumerator Kill()
     {
-        yield return new WaitForFixedUpdate();
-        Destroy(gameObject);
+        yield return new WaitForFixedUpdate();  // delay to avoid race condition
+        if (gameObject)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private bool ChangeHealth(float amt)    // returns true if still alive
