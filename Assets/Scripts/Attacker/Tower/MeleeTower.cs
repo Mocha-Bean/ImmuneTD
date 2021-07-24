@@ -18,6 +18,8 @@ public class MeleeTower : Attacker
 
     [SerializeField]
     private Animator weaponAnimator;
+    [SerializeField]
+    private AudioSource audioSource;
 
     public MeleeTower()
     {
@@ -30,12 +32,21 @@ public class MeleeTower : Attacker
         if (newTargetsBlocking.Count != 0)
         {
             weaponAnimator.SetTrigger("Attack");
+            audioSource.Play();
+
         }
         foreach (MovingAttacker attackTarget in newTargetsBlocking)
         {
             if (attackTarget)
             {
                 bool targetAlive = attackTarget.Attack(effectiveDamage, attackEffects, this);
+                if((attackTarget.transform.position - transform.position).normalized.x == 1)
+                {
+                    transform.localScale = new Vector3(-1, 1, 1);
+                } else
+                {
+                    transform.localScale = new Vector3(1, 1, 1);
+                }
                 if (targetAlive)       // if we killed the target, don't call their method!
                 {
                     attackTarget.BlockBy(this);

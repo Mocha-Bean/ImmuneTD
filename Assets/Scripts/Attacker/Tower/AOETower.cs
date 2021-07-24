@@ -9,6 +9,7 @@ public class AOETower : Attacker
 
     protected override void HandleNewTarget(Attacker target)
     {
+        Debug.Log(target.name);
         AttackInRange();
     }
 

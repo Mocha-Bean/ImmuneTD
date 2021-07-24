@@ -23,7 +23,7 @@ public class Attacker : MonoBehaviour
     public HashSet<StatusEffect> attackEffects = new HashSet<StatusEffect>();     // what debuff(s)/buff(s) do we give on attack?
     public Dictionary<StatusEffect, float> effectModifiers = new Dictionary<StatusEffect, float>
     {
-        {StatusEffect.AttackSpeedUp, 4f/3f},
+        {StatusEffect.AttackSpeedUp, 1.5f},
         {StatusEffect.KnownAttackSpeed, 2f},
         {StatusEffect.AttackSpeedDown, 2f/3f},
         {StatusEffect.AttackDamageUp, 1.5f},
@@ -92,7 +92,6 @@ public class Attacker : MonoBehaviour
         Attacker newAttacker;
         if (collision.gameObject.TryGetComponent<Attacker>(out newAttacker))
         {
-            Debug.Log(newAttacker.team);
             if (newAttacker.team == targetTeam)
             {
                 TargetsInRange.Add(newAttacker);
@@ -100,7 +99,6 @@ public class Attacker : MonoBehaviour
                 if (!awake)
                 {
                     StartCoroutine(WakeUp());
-                    Debug.Log("woke");
                 }
             }
         }

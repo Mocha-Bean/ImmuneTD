@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     // Keeps track of how healthy immune system is
     [SerializeField]
     private int health;
+    private int maxHealth = 100;
     // Energy can be used to place towers. Replenishes before each round.
     [SerializeField]
     private int energy;
+    private bool allSpawned;
 
     private int healthDamage = 10;  // amount of damage to apply when an enemy makes it through defenses
 
@@ -49,6 +52,14 @@ public class GameManager : MonoBehaviour
     private GameObject staphPrefab;
     [SerializeField]
     private Tilemap floor;
+    [SerializeField]
+    private Text textBox;
+    [SerializeField]
+    private Text energyText;
+    [SerializeField]
+    private Text healthText;
+    [SerializeField]
+    private AudioSource audioSource;
 
     private List<List<EnemySpawn>> rounds = new List<List<EnemySpawn>>()
     {
@@ -108,7 +119,7 @@ public class GameManager : MonoBehaviour
             EnemySpawn.MAC,
             EnemySpawn.MAC,
             EnemySpawn.MAC,
-            EnemySpawn.MAC,
+            EnemySpawn.MAC,                                                                                                           
             EnemySpawn.Staph,
             EnemySpawn.Staph,
             EnemySpawn.Staph,
@@ -181,26 +192,29 @@ public class GameManager : MonoBehaviour
     IEnumerator BeginGame()
     {
         // Replenish health and energy
-        health = 100;
+        health = maxHealth;
         energy = 70;
 
-        print("15 seconds until first round start");
+        energyText.text = "Energy: " + energy;
+        healthText.text = "Health: " + health;
+
+        ChangeText("15 seconds until first round start");
         yield return new WaitForSeconds(15);
 
         for(int i = 0; i < rounds.Count; i++)
         {
             if (health > 0)
             {
-                print("Starting round " + i);
+                ChangeText("Starting round " + (i+1));
                 StartCoroutine(StartRound(i));
                 yield return new WaitForFixedUpdate();  // make sure we're not in a race condition with the first enemy spawning
-                while (currentSpawned.Count > 0 && health > 0)    // wait until all spawned enemies have disappeared OR health hits 0
+                while (!(currentSpawned.Count <= 0 && allSpawned) && health > 0)    // wait until all enemies in round have disappeared OR health hits 0
                 {
                     yield return new WaitForFixedUpdate();
                 }
-                if (health > 0)
+                if (health > 0 && i < rounds.Count - 1)
                 {
-                    print("Round " + i + " success! 15 seconds until next round.");
+                    ChangeText("Round " + (i+1) + " success! 15 seconds until next round.");
                     yield return new WaitForSeconds(15);
                 } else
                 {
@@ -210,16 +224,17 @@ public class GameManager : MonoBehaviour
         }
         if(health > 0)      // we've exited the for loop; is it because we won or we lost?
         {
-            print("You win!");
+            ChangeText("You win!");
         } else
         {
-            print("Immune system failure!");
+            ChangeText("Immune system failure!");
         }
         EndGame();
     }
 
     public IEnumerator StartRound(int num)
     {
+        allSpawned = false;
         currentSpawned.Clear();
         MovingAttacker newSpawn;
         foreach(EnemySpawn enemy in rounds[num])
@@ -254,11 +269,17 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        allSpawned = true;
     }
 
     private void EndGame()
     {
         print("End of game!");
+    }
+
+    private void ChangeText(string text)
+    {
+        textBox.text = text;
     }
 
     /*
@@ -291,7 +312,7 @@ public class GameManager : MonoBehaviour
         {
             health = 0; // keep health from being negative
         }               // we don't need to handle death procedure here; main game loop checks health
-        print("Current health: " + health);
+        healthText.text = "Health: " + health;
     }
 
     public int getEnergy()
@@ -302,13 +323,17 @@ public class GameManager : MonoBehaviour
     public void reduceEnergy(int reduction)
     {
         energy -= reduction;
-        print("Current energy: " + energy);
+        energyText.text = "Energy: " + energy;
     }
 
     public void ReportEnemyDeath(MovingAttacker enemy, int energyReward)
     {
         currentSpawned.Remove(enemy);
         energy += energyReward;
-        print("Current energy: " + energy);
+        if(energyReward > 0)
+        {
+            audioSource.Play();
+        }
+        energyText.text = "Energy: " + energy;
     }
 }

@@ -14,10 +14,13 @@ public class Turret : Attacker
     private Animator gunAnimator;
     [SerializeField]
     private GameObject bulletPrefab;
+    [SerializeField]
+    private AudioSource audioSource;
 
     protected override void TimedAttack()
     {
         gunAnimator.SetTrigger("Shoot");
+        audioSource.Play();
         Attacker target = GetPriorityTarget(TargetsInRange);
         Vector3 diff = transform.position - target.gameObject.transform.position;
         float diffAngle = Mathf.Atan2(diff.y, diff.x);

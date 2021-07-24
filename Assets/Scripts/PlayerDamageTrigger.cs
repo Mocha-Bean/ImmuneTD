@@ -6,6 +6,8 @@ public class PlayerDamageTrigger : MonoBehaviour
 {
     [SerializeField]
     private GameManager gameManager;
+    [SerializeField]
+    private AudioSource audioSource;
 
     private MovingAttacker attacker;
 
@@ -16,6 +18,7 @@ public class PlayerDamageTrigger : MonoBehaviour
             attacker.energyReward = 0;  // so the player doesn't get rewarded for this enemy's death
             gameManager.ReportEnemyDeath(attacker, attacker.energyReward);
             gameManager.ReduceHealth();
+            audioSource.Play();
             attacker.Attack(attacker.healthMax * 5, new HashSet<Combat.StatusEffect>() { }, null);  // kill attacker
         }
     }

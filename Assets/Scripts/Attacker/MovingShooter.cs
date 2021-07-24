@@ -13,6 +13,8 @@ public class MovingShooter : MovingAttacker
     [SerializeField]
     protected Color bulletColor;
     [SerializeField]
+    protected AudioSource audioSource;
+    [SerializeField]
     protected int numShoot;
 
     protected override void TimedAttack()
@@ -26,6 +28,10 @@ public class MovingShooter : MovingAttacker
         foreach (Attacker target in targetsSelected)
         {
             Combat.Gun.ShootAtAttacker(bulletPrefab, this, transform.position, target, bulletColor);
+        }
+        if(targetsSelected.Count != 0)
+        {
+            audioSource.Play();
         }
     }
 

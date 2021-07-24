@@ -136,11 +136,17 @@ public class MovingAttacker : Attacker
                 transform.position = potentialNextPos;
             }
         }
+        if (activeEffects.Contains(StatusEffect.MoveBlock) && !blockedBy)   // are we getting blocked by a nonexistent tower?
+        {
+            activeEffects.Remove(StatusEffect.MoveBlock);
+            blockedBy = null;
+        }
     }
 
     protected override IEnumerator Kill()
     {
         gameManager.ReportEnemyDeath(this, energyReward);   // if we were killed by PlayerDamageTrigger, it will remotely set our energyReward to 0
+        energyReward = 0;                                   // in case we get "killed" multiple times, prevent us from giving multiple rewards
         return base.Kill();
     }
 

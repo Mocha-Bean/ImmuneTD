@@ -16,6 +16,8 @@ public class MapManager : MonoBehaviour
     [SerializeField]
     private TowerManager tm;
     [SerializeField]
+    private UIManager uiManager;
+    [SerializeField]
     private Vector3Int[] gridPosFloor = new Vector3Int[2];
     [SerializeField]
     private Vector3Int[] gridPosPath = new Vector3Int[2];
@@ -34,12 +36,7 @@ public class MapManager : MonoBehaviour
     private int PlaceID;
 
     private void Update()
-    {
-        if (Input.anyKeyDown)
-        {
-            InputKeyHandler();
-        }
-        
+    {   
         if (currentPlaceMode == PlaceMode.Turret)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -61,8 +58,14 @@ public class MapManager : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(0))
             {
-                if(tm.RequestSpawn(PlaceID, gridPosFloor[1]) == 1)           // attempt to spawn turret, reset place mode upon success
+                int requestResult = tm.RequestSpawn(PlaceID, gridPosFloor[1]);
+                if(requestResult == 1)           // attempt to spawn turret, reset place mode upon success
                 {
+                    uiManager.HidePlacement();
+                    CancelPlace();
+                } else if (requestResult == -2)     // were we unable to afford the tower?
+                {
+                    uiManager.ShowPlacement();
                     CancelPlace();
                 }
             }
@@ -90,6 +93,7 @@ public class MapManager : MonoBehaviour
             {
                 if(tm.RequestSpawn(PlaceID, gridPosPath[1]) == 1)
                 {
+                    uiManager.HidePlacement();
                     CancelPlace();
                 }
             }
@@ -115,46 +119,6 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    private void InputKeyHandler()
-    {
-        if (Input.GetKeyDown("1"))
-        {
-            RequestPlace(-1);   // neutrophil
-        }
-        if (Input.GetKeyDown("2"))
-        {
-            RequestPlace(-2);   // macrophage
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            RequestPlace(1);    // B Cell
-        }
-        if (Input.GetKeyDown("4"))
-        {
-            RequestPlace(2);    // T Cell
-        }
-        if (Input.GetKeyDown("5"))
-        {
-            RequestPlace(3);    // NK Cell
-        }
-        if (Input.GetKeyDown("6"))
-        {
-            RequestPlace(4);    // Dendritic Cell
-        }
-        if (Input.GetKeyDown("7"))
-        {
-            RequestPlace(5);    // Hemocytoblast
-        }
-        if (Input.GetKeyDown("8"))
-        {
-            RequestPlace(6);    // Mast Cell
-        }
-        if (Input.GetKeyDown("`"))
-        {
-            CancelPlace();
-        }
-    }
-
     public void RequestPlace(int id)
     {
         /* Neutrophil = -1,
@@ -170,9 +134,11 @@ public class MapManager : MonoBehaviour
         if (id < 0)
         {
             currentPlaceMode = PlaceMode.Melee;
+            uiManager.DuringPlacement();
         } else if (id > 0)
         {
             currentPlaceMode = PlaceMode.Turret;
+            uiManager.DuringPlacement();
         }
         else
         {
